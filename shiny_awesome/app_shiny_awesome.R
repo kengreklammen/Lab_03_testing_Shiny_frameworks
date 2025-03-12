@@ -4,11 +4,13 @@ if(!require("shiny")) install.packages("shiny")
 if(!require("ggplot2")) install.packages("ggplot2")
 if(!require("bslib")) install.packages("bslib")
 if(!require("shinythemes")) install.packages("shinythemes")
+if(!require("highcharter")) install.packages("highcharter")
 
 library(shiny)
 library(ggplot2)
 library(bslib)
 library(shinythemes)
+library(highcharter)
 
 
 # Define UI ---------------------------------------------------------------
@@ -22,12 +24,18 @@ ui <-
         selectInput("color", "Choose a color:", choices = c("Blue" = "#007bc2", "Red" = "#c20000", "Green" = "#00c244")),
         selectInput("theme", "Choose a theme:", choices = c("Classic", "Minimal", "Dark"))
       ),
+      
+      # ********************* MAIN PAGE CONTENT *********************
+      
+      # ************************* FIRST ROW *************************
       layout_columns(
         col_widths = c(4,4,4),
         value_box("Mean Waiting Time", textOutput("mean_waiting")),
         value_box("Median Waiting Time", textOutput("median_waiting")),
         value_box("Total Eruptions", textOutput("eruption_count"))
       ),
+      
+      # ************************* SECOND ROW ************************
       layout_columns(
         col_widths = c(6, 6),
         card(
@@ -50,6 +58,16 @@ ui <-
           full_screen = T,
           card_body(plotOutput("scatterPlot"))
         )
+      ),
+      
+      # # ************************* LAST ROW ***************************
+      layout_columns(
+        col_widths = c(12),
+        card(
+          card_header("Highcharter visualization"),
+          full_screen = T,
+          card_body(highchartOutput("awesomePlot"))
+        )
       )
     )
   )
@@ -63,6 +81,10 @@ server <- function(input, output) {
            "Minimal" = theme_minimal(),
            "Dark" = theme_dark())
   })
+  
+  data("mpg", "diamonds", "economics_long", package = "ggplot2")
+  head(mpg)
+
   
   output$mean_waiting <- renderText({
     paste(round(mean(faithful$waiting), 2), "mins")
@@ -111,6 +133,11 @@ server <- function(input, output) {
       labs(title = "Scatter Plot of Eruptions vs Waiting Time", x = "Eruption Duration (mins)", y = "Waiting Time (mins)") +
       theme_choice()
   })
+  
+  output$awesomePlot <- renderHighchart({
+    hchart(mpg, "point", hcaes(x = displ, y = cty, group = year))
+  })
+  
 }
 
 
