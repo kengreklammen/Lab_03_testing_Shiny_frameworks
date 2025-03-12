@@ -4,3 +4,7 @@
 .Ruserdata
 /renv
 *.Rproj
+/bs4dash
+/shinydashboard
+/shiny_default
+/bslib
