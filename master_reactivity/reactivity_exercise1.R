@@ -23,15 +23,15 @@ server <- function(input, output, session) {
   output$iris_table <- renderTable({ filtered_data() })
   
   
-  data2 <- eventReactive(input$button_filter, {
-    subset(filtered_data, Sepal.Length == input$slider_sepallength)
-    updateSliderInput(session, "slider_sepallength", 
-                      min = min(filtered_data()$Sepal.Length), 
-                      max = max(filtered_data()$Sepal.Length), 
-                      value = min(filtered_data()$Sepal.Length))
-  })
-  output$iris_table <- renderTable({ data2() })
-  
+  # data2 <- eventReactive(input$button_filter, {
+  #   subset(filtered_data, Sepal.Length == input$slider_sepallength)
+  #   updateSliderInput(session, "slider_sepallength", 
+  #                     min = min(filtered_data()$Sepal.Length), 
+  #                     max = max(filtered_data()$Sepal.Length), 
+  #                     value = min(filtered_data()$Sepal.Length))
+  # })
+  # output$iris_table <- renderTable({ data2() })
+  # 
   
   observe({
     print(paste("The user selected a different Species: ", input$select_species))
